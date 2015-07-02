@@ -1,0 +1,24 @@
+﻿{
+
+  "States": [
+    {
+      "Name": "Washington",
+      "Code": "WA"
+    },
+    {
+      "Name": "California",
+      "Code": "CA"
+    }
+  ],
+  "Zones": [
+    {
+      "Name": "East United States",
+      "Code": "East US"
+    },
+    {
+      "Name": "West United States",
+      "Code" :  "West US"
+    }
+  ]
+
+}
