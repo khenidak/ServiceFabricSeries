@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceManifest Name="HostingActivationPkg"
+                 Version="1.0.0.0"
+                 xmlns="http://schemas.microsoft.com/2011/01/fabric"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ServiceTypes>
+    <StatefulServiceType ServiceTypeName="ComputeSvc" HasPersistedState="true"  />
+
+    <!-- added another service type to my package-->
+    <StatelessServiceType ServiceTypeName="GatewaySvc" />
+  </ServiceTypes>
+
+  <!-- Code package is your service executable. -->
+  <CodePackage Name="Gw.Code" Version="1.0.0.0">
+    <EntryPoint>
+      <ExeHost>
+        <!-- 
+            this is the host where replicas will be activated, 
+            typically Service Fabric runs one instance per node per application instance
+         -->
+        <Program>HostingActivationSvcs.exe </Program>
+      </ExeHost>
+    </EntryPoint>
+  </CodePackage>
+
+ 
+ 
+  <ConfigPackage Name="Config" Version="1.0.0.0" />
+  <Resources>
+    <Endpoints>
+      <Endpoint Name="ServiceEndpoint"  />
+      <Endpoint Name="ReplicatorEndpoint" />
+    </Endpoints>
+  </Resources>
+</ServiceManifest>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest ApplicationTypeName="HostingActivationApp" ApplicationTypeVersion="1.0.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
+       should match the Name and Version attributes of the ServiceManifest element defined in the 
+       ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="HostingActivationPkg" ServiceManifestVersion="1.0.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  
+    <!-- -->
+  <ServiceTemplates>
+    
+    <StatelessService   ServiceTypeName="GatewaySvc" InstanceCount="4">
+      <UniformInt64Partition PartitionCount="3" LowKey="-9223372036854775808" HighKey="9223372036854775807"/>
+    </StatelessService>
+  </ServiceTemplates>
+  
+    <DefaultServices>
+      <!-- this is the initial backend worker staticly defined-->
+    <Service Name="Worker1">
+      <StatefulService ServiceTypeName="ComputeSvc" TargetReplicaSetSize="3" MinReplicaSetSize="3">
+        <UniformInt64Partition PartitionCount="3" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+    
+    <!-- this is an additional worker, initially we expect to offload here, 
+         notice I am using a different partitioning scheme-->
+    <Service Name="worker2">
+      
+      <StatefulService ServiceTypeName="ComputeSvc" TargetReplicaSetSize="3" MinReplicaSetSize="3">
+        <NamedPartition>
+          <Partition Name="London"/>
+          <Partition Name="Paris"/>
+          <Partition Name="Newyork"/>
+        </NamedPartition>
+      </StatefulService>
+    </Service>
+
+    <!-- Staticly defining another statless service for the gateway-->
+    <Service Name="Gw1">
+      <StatelessService ServiceTypeName="GatewaySvc" InstanceCount="-1">
+        <SingletonPartition/>
+      </StatelessService>
+    </Service>
+      
+    
+  </DefaultServices>
+</ApplicationManifest>
